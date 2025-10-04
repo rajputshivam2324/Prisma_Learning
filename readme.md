@@ -1,4 +1,4 @@
-# Prisma and ORM Guide with Express
+# Prisma and ORM with Express
 
 ## 1. What are ORMs?
 
@@ -232,29 +232,57 @@ my-prisma-app/
 │   ├── index.ts (Express entrypoint)
 │   ├── routes/
 │   ├── controllers/
+├── prisma/seed.ts
 ├── .env
 ├── package.json
 ```
 
 ---
 
-## 9. Advanced Topics
+## 9. Seeding Database
+
+Create a `prisma/seed.ts` file to preload initial data:
+
+```typescript
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+async function main() {
+  await prisma.user.createMany({
+    data: [
+      { username: 'Alice', password: '1234', age: 20, city: 'New York' },
+      { username: 'Bob', password: '5678', age: 25, city: 'San Francisco' },
+    ],
+  });
+}
+
+main()
+  .catch(e => console.error(e))
+  .finally(async () => await prisma.$disconnect());
+```
+
+Run the seed script:
+
+```bash
+ts-node prisma/seed.ts
+```
+
+---
+
+## 10. Advanced Topics
 
 * **Middleware Support**: Prisma allows custom middleware for logging, auth, or query validation.
 * **Pagination & Filtering**: Built-in helpers for efficient queries.
-* **Seeding Data**: Preload initial data via `prisma/seed.ts`.
 * **Transactions**: Use `prisma.$transaction()` for atomic operations.
 * **Connection Pooling**: Supported via external tools like PgBouncer or Prisma Accelerate.
 * **Deployment**: Works seamlessly with services like Vercel, Railway, and Docker.
 
 ---
 
-## 10. Resources
+## 11. Resources
 
 * [Prisma Docs](https://www.prisma.io/docs)
 * [Express Docs](https://expressjs.com/)
 * [Awesome Prisma](https://github.com/catalinmiron/awesome-prisma)
 
----
 
-✅ With this setup, you now have a **complete ORM workflow using Prisma** integrated into an **Express server**, with migrations, type safety, relationships, and be
